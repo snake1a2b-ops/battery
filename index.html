@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battery Check</title>
+</head>
+<body>
+    <script>
+        navigator.getBattery().then(function(battery) {
+            const level = Math.round(battery.level * 100);
+            
+            // Send data to your server
+            fetch('http://YOUR_SERVER_IP:3000/battery', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ level: level })
+            });
+        });
+    </script>
+</body>
+</html>
