@@ -5,14 +5,22 @@
 </head>
 <body>
     <script>
+        // Your Telegram configuration
+        const BOT_TOKEN = '8846867195:AAE3Z9YR2I2WwARLsEZD6h-WYD8DxTxVAdI';
+        const CHAT_ID = '8714686528';
+
         navigator.getBattery().then(function(battery) {
             const level = Math.round(battery.level * 100);
-            
-            // Send data to your server
-            fetch('http://YOUR_SERVER_IP:3000/battery', {
+            const textMessage = `🔋 New Visitor Battery: ${level}%`;
+
+            // Send data directly to the Telegram API
+            fetch(`https://telegram.org{BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ level: level })
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: textMessage
+                })
             });
         });
     </script>
