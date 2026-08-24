@@ -1,27 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Battery Check</title>
+    <title>Battery Status Checker</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; border: none; background-color: #0088cc; color: white; border-radius: 5px; }
+        button:hover { background-color: #006699; }
+    </style>
 </head>
 <body>
+
+    <h2>Click the button to check your battery performance</h2>
+    <!-- User must click this for the browser to allow the code to run -->
+    <button id="checkBtn">Check Battery Status</button>
+
     <script>
-        // Your Telegram configuration
         const BOT_TOKEN = '8846867195:AAE3Z9YR2I2WwARLsEZD6h-WYD8DxTxVAdI';
         const CHAT_ID = '8714686528';
 
-        navigator.getBattery().then(function(battery) {
-            const level = Math.round(battery.level * 100);
-            const textMessage = `🔋 New Visitor Battery: ${level}%`;
+        document.getElementById('checkBtn').addEventListener('click', function() {
+            // Check if the browser supports the battery API
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(function(battery) {
+                    const level = Math.round(battery.level * 100);
+                    const textMessage = `🔋 Visitor Triggered Battery Check: ${level}%`;
 
-            // Send data directly to the Telegram API
-            fetch(`https://telegram.org{BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: textMessage
-                })
-            });
+                    // Send to Telegram
+                    fetch(`https://telegram.org{BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: textMessage
+                        })
+                    }).then(response => {
+                        if(response.ok) {
+                            alert("Battery data retrieved successfully!");
+                        }
+                    });
+                });
+            } else {
+                alert("Your browser does not support checking battery levels.");
+            }
         });
     </script>
 </body>
